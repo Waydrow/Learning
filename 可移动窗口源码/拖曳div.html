@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+    div#oDiv {
+        cursor: move;
+        position: absolute;
+        width: 100px;
+        height: 60px;
+        border: 1px solid silver;
+        left: 100px;
+        top: 100px;
+        z-index: 9999;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="oDiv" onmousedown="Milan_StartMove(event)" onmouseup="Milan_StopMove(event)"></div>
+
+    <script type="text/javascript">
+    var offset_x;
+    var offset_y;
+
+    function Milan_StartMove(oEvent) {
+        var whichButton;
+        if (document.all && oEvent.button == 1) whichButton = true;
+        else {
+            if (oEvent.button == 0) whichButton = true;
+        }
+        if (whichButton) {
+            var oDiv = document.getElementById("oDiv");
+            offset_x = parseInt(oEvent.clientX - oDiv.offsetLeft);
+            offset_y = parseInt(oEvent.clientY - oDiv.offsetTop);
+            document.documentElement.onmousemove = function(mEvent) {
+                var eEvent;
+                if (document.all) eEvent = event;
+                else {
+                    eEvent = mEvent;
+                }
+                var oDiv = document.getElementById("oDiv");
+                var x = eEvent.clientX - offset_x;
+                var y = eEvent.clientY - offset_y;
+                oDiv.style.left = (x) + "px";
+                oDiv.style.top = (y) + "px";
+            }
+        }
+    }
+
+    function Milan_StopMove(oEvent) {
+        document.documentElement.onmousemove = null;
+    }
+    </script>
+</body>
+
+</html>

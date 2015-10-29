@@ -1,0 +1,37 @@
+body,div,input,button,th,td {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #fff;
+    color: #555;
+    font-size: 14px;
+    font-family: "Mirosoft YaHei",sans-serif;
+}
+td,th,caption {
+    font-size: 14px;
+}
+input,button {
+    font: 14px Verdana, Helvetica, Arial, sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 1px;
+}
+
+div{
+	margin-top: 10%
+}
+input#result{
+	width: 238px;
+	height: 50px;
+	border: 1px solid #bbb;
+}
+table button{
+	width: 60px;
+	height: 60px;
+	background-color: #F1F1F1;
+	border: 1px solid #BBBBBB;
+}
