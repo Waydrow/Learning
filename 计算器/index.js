@@ -5,7 +5,13 @@ var flag = 0;
 //第一个操作数
 var firstNum = '';
 var beforeNum = 0;
-// 连续计算
+// 连续计算 自动补充操作 连等
+var afterNum = 0;
+//自动补充操作,存储第二个操作数 2+3=3= 结果应为6, 
+var secondNum = 0;
+//自动补充操作 2+3=3= 结果应为6
+var otherEqual = false;
+//自动补充操作 连等 如1+2===
 var doubleEqual = false;
 //开始输入0判断,firtNum＝''时为false
 var enterFlag = false;
@@ -15,9 +21,56 @@ var onlyPoint = true;
 var operatorOption = null;
 //某次计算结束后为true
 var finFlag = false;
+//输入运算符后为true
+var opeartorFlag = false;
 
 //初始化
 result.value = 0;
+
+var numObj = document.getElementsByName("number");
+for (var i = numObj.length - 1; i >= 0; i--) {
+  numObj[i].onclick = function() {
+    numClick(this.value);
+  }
+};
+document.getElementsByName("clear")[0].onclick = function() {
+  clearAll();
+};
+document.getElementsByName("clearOne")[0].onclick = function() {
+  clearCurrent();
+};
+document.getElementById("backOne").onclick = function() {
+  backOneStep();
+};
+document.getElementsByName("square")[0].onclick = function() {
+  square();
+};
+document.getElementsByName("sqrt")[0].onclick = function() {
+  sqrt();
+};
+document.getElementById("equal").onclick = function() {
+  calculator();
+};
+document.getElementsByName("plusMinus")[0].onclick = function() {
+  addPlusMinus();
+}
+document.getElementsByName("percent")[0].onclick = function() {
+  operator(this);
+};
+document.getElementsByName("division")[0].onclick = function() {
+  operator(this);
+};
+document.getElementsByName("multi")[0].onclick = function() {
+  operator(this);
+};
+document.getElementsByName("sub")[0].onclick = function() {
+  operator(this);
+};
+document.getElementsByName("add")[0].onclick = function() {
+  operator(this);
+};
+
+
 
 function numClick(numTemp) {
   if (finFlag == true) {
@@ -34,7 +87,6 @@ function numClick(numTemp) {
     firstNum = 0;
     if (operatorOption)
       result.value = 0;
-    console.log(firstNum)
     return;
   }
   doubleEqual = false;
@@ -44,12 +96,12 @@ function numClick(numTemp) {
   firstNum += numTemp;
   result.value = firstNum;
   afterNum = firstNum;
-  console.log(firstNum)
 }
 
 function operator(operatorTemp) {
   doubleEqual = false;
   if (flag == 1) {
+    opeartorFlag=false;
     calculator();
   }
   operatorOption = operatorTemp.name;
@@ -58,47 +110,64 @@ function operator(operatorTemp) {
   firstNum = '';
   enterFlag = false;
   onlyPoint = true;
+  otherEqual = false;
+  opeartorFlag=true;
 }
 
 function calculator() {
-  // if(flag==0)return;
+  if(firstNum===''&&opeartorFlag==true)firstNum=beforeNum;
   switch (operatorOption) {
     case 'add':
-      result.value = (beforeNum - 0).add(doubleEqual ? (afterNum - 0) : (firstNum - 0));
+      if (flag == 0 && otherEqual) result.value = (firstNum - 0).add(secondNum - 0);
+      else result.value = (beforeNum - 0).add(doubleEqual ? (afterNum - 0) : (firstNum - 0));
       break;
     case 'sub':
-      result.value = (beforeNum - 0).sub(doubleEqual ? (afterNum - 0) : (firstNum - 0));
+      if (flag == 0 && otherEqual) result.value = (firstNum - 0).sub(secondNum - 0);
+      else result.value = (beforeNum - 0).sub(doubleEqual ? (afterNum - 0) : (firstNum - 0));
       break;
     case 'multi':
-      result.value = (beforeNum - 0).mul(doubleEqual ? (afterNum - 0) : (firstNum - 0));
+      if (firstNum === '') break;
+      if (flag == 0 && otherEqual) result.value = (firstNum - 0).mul(secondNum - 0);
+      else result.value = (beforeNum - 0).mul(doubleEqual ? (afterNum - 0) : (firstNum - 0));
       break;
     case 'division':
-      if (firstNum - 0 == 0) {
+      if (flag == 0 && otherEqual) {
+        if(result.value=="Error")break;
+        result.value = (firstNum - 0).div(secondNum - 0);
+        break;
+      }
+      if (firstNum === '') break;
+      if (firstNum - 0 === 0) {
         result.value = "Error";
         break;
       }
       result.value = (beforeNum - 0).div(doubleEqual ? (afterNum - 0) : (firstNum - 0));
       break;
     case 'percent':
-      result.value = (beforeNum - 0) % (doubleEqual ? (afterNum - 0) : (firstNum - 0));
+      if (firstNum === '') break;
+      if (flag == 0 && otherEqual) result.value = (firstNum - 0) % (secondNum - 0);
+      else result.value = (beforeNum - 0) % (doubleEqual ? (afterNum - 0) : (firstNum - 0));
       break;
     default:
       result.value = firstNum - 0;
   }
-  if (!doubleEqual) flag--;
+  if (!doubleEqual && !otherEqual) flag--;
+  if (!otherEqual) secondNum = firstNum;
   beforeNum = result.value;
   firstNum = result.value;
-  console.log(firstNum)
   enterFlag = false;
   onlyPoint = true;
   finFlag = true;
   doubleEqual = true;
+  otherEqual = true;
+  opeartorFlag=false;
 }
 
 function addPlusMinus() {
+  firstNum+='';
+  if(firstNum.length<=1&&firstNum==0){firstNum-=0; return;}
   if (firstNum[0] == '-') firstNum = firstNum.slice(1);
   else firstNum = '-' + firstNum;
-  console.log(firstNum)
   result.value = firstNum;
 }
 
@@ -112,6 +181,8 @@ function clearAll() {
   operatorOption = null;
   finFlag = false;
   doubleEqual = false;
+  otherEqual = false;
+  opeartorFlag=false;
 }
 
 function clearCurrent() {
@@ -121,33 +192,45 @@ function clearCurrent() {
 
 function backOneStep() {
   // 如果刚计算结束，结果无法退格
-  if(finFlag==true)return;
+  if (finFlag == true) return;
   firstNum += '';
-  if (firstNum[firstNum.length - 1] == ".") onlyPoint = true;
-  if (firstNum.length <= 1) {
+  if (firstNum[firstNum.length - 1] == ".") {
+    onlyPoint = true;
+    //负号处理 0 . ± ←  
+    if(firstNum[0]=='-'){
+      firstNum='';
+      result.value=0;
+      enterFlag=false;
+      return;
+    }
+  };
+  if ((firstNum.length <= 1)||(firstNum[0]=='-'&&firstNum.length==2)) {
+    enterFlag = false;
+    onlyPoint = true;
+    if(firstNum==='')return;
     firstNum = '';
     result.value = 0;
-    enterFlag=false;
-    onlyPoint=true;
     return;
   } else firstNum = firstNum.slice(0, firstNum.length - 1);
-  if(firstNum==0)enterFlag=false;
+  if (firstNum == 0) enterFlag = false;
   result.value = firstNum;
-  console.log(firstNum)
 }
-// 平方
-function square(){
-  firstNum-=0;
-  firstNum=firstNum.mul(firstNum);
-  firstNum-='';
-  result.value=firstNum;
+// 1/x
+function square() {
+  var x = 1-0;
+  firstNum -= 0;
+  firstNum = x.div(firstNum);
+  firstNum += '';
+  result.value = firstNum;
+  finFlag = true;
 }
 //平方根
-function sqrt(){
-  firstNum-=0;
-  firstNum=Math.sqrt(firstNum);
-  firstNum-='';
-  result.value=firstNum;
+function sqrt() {
+  firstNum -= 0;
+  firstNum = Math.sqrt(firstNum);
+  firstNum -= '';
+  result.value = firstNum;
+  finFlag = true;
 }
 
 
