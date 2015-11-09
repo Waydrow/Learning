@@ -4,97 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Calculator</title>
-    <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
-    <div align="center">
-        <input type="text" name="result" id="result">
-        <table>
-            <tr>
-                <th>
-                    <button name="clear">C</button>
-                </th>
-                <th>
-                    <button name="clearOne">CE</button>
-                </th>
-                <th colspan="2">
-                    <button name="backOne" id="backOne">&lt;---</button>
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    <button name="square">1/x</button>
-                </td>
-                <td>
-                    <button name="sqrt">√x</button>
-                </td>
-                <td>
-                    <button name="percent">%</button>
-                </td>
-                <td>
-                    <button name="division">&divide;</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button value="7" name="number">7</button>
-                </td>
-                <td>
-                    <button value="8" name="number">8</button>
-                </td>
-                <td>
-                    <button value="9" name="number">9</button>
-                </td>   
-                <td>
-                    <button name="multi">*</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button value="4" name="number">4</button>
-                </td>
-                <td>
-                    <button value="5" name="number">5</button>
-                </td>
-                <td>
-                    <button value="6" name="number">6</button>
-                </td>
-                <td>
-                    <button name="sub">-</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button value="1" name="number">1</button>
-                </td>
-                <td>
-                    <button value="2" name="number">2</button>
-                </td>
-                <td>
-                    <button value="3" name="number">3</button>
-                </td>
-                <td>
-                    <button name="add">+</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button value="0" name="number">0</button>
-                </td>
-                <td>
-                    <button name="number" value=".">.</button>
-                </td>
-                <td>
-                    <button name="plusMinus">+/-</button>
-                </td>
-                <td>
-                    <button name="equal" id="equal">=</button>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <div id="hello"></div>
+    <div id="ni"></div>
     <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript">
+    initCalculator("hello");
+    </script>
 </body>
 
 </html>
