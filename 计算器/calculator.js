@@ -1,3 +1,11 @@
+// ********************************************************************
+// 使用方法：
+// 先将此js文件引入到html当中，创建一个包含计算器的元素，设置其id
+// 在script标签中 initCalculator(yourId); 即可
+// ********************************************************************
+
+
+//初始化一个计算器
 function initCalculator(containId) {
   var containDiv = document.getElementById(containId);
 
@@ -6,7 +14,8 @@ function initCalculator(containId) {
 
   // ***************************************
   // 结果
-  var result = document.getElementById("result");
+  var tempResult = "result";
+  var result = getByName(tempResult, containId)[0];
   //是否可以计算,为1时可计算
   var flag = 0;
   //第一个操作数
@@ -34,51 +43,68 @@ function initCalculator(containId) {
   //初始化
   result.value = 0;
 
-  var numObj = document.getElementsByName("number");
-  for (var i = numObj.length - 1; i >= 0; i--) {
-    numObj[i].onclick = function() {
-      numClick(this.value);
+
+  // 为每个按钮绑定事件
+  ! function() {
+    var tempNumName = "number";
+    var numObj = getByName(tempNumName, containId);
+    for (var i = numObj.length - 1; i >= 0; i--) {
+      numObj[i].onclick = function() {
+        numClick(this.value);
+      }
+    };
+    var tempClearName = "clear";
+    getByName(tempClearName, containId)[0].onclick = function() {
+      clearAll();
+    };
+    var tempClearOne = "clearOne";
+    getByName(tempClearOne, containId)[0].onclick = function() {
+      clearCurrent();
+    };
+    var tempBackOne = "backOne";
+    getByName(tempBackOne, containId)[0].onclick = function() {
+      backOneStep();
+    };
+    var tempSquare = "square";
+    getByName(tempSquare, containId)[0].onclick = function() {
+      square();
+    };
+    var tempSqrt = "sqrt";
+    getByName(tempSqrt, containId)[0].onclick = function() {
+      sqrt();
+    };
+    var tempEqual = "equal";
+    getByName(tempEqual, containId)[0].onclick = function() {
+      calculator();
+    };
+    var tempPlusMinus = "plusMinus";
+    getByName(tempPlusMinus, containId)[0].onclick = function() {
+      addPlusMinus();
     }
-  };
-  document.getElementsByName("clear")[0].onclick = function() {
-    clearAll();
-  };
-  document.getElementsByName("clearOne")[0].onclick = function() {
-    clearCurrent();
-  };
-  document.getElementById("backOne").onclick = function() {
-    backOneStep();
-  };
-  document.getElementsByName("square")[0].onclick = function() {
-    square();
-  };
-  document.getElementsByName("sqrt")[0].onclick = function() {
-    sqrt();
-  };
-  document.getElementById("equal").onclick = function() {
-    calculator();
-  };
-  document.getElementsByName("plusMinus")[0].onclick = function() {
-    addPlusMinus();
-  }
-  document.getElementsByName("percent")[0].onclick = function() {
-    operator(this);
-  };
-  document.getElementsByName("division")[0].onclick = function() {
-    operator(this);
-  };
-  document.getElementsByName("multi")[0].onclick = function() {
-    operator(this);
-  };
-  document.getElementsByName("sub")[0].onclick = function() {
-    operator(this);
-  };
-  document.getElementsByName("add")[0].onclick = function() {
-    operator(this);
-  };
+    var tempPercent = "percent";
+    getByName(tempPercent, containId)[0].onclick = function() {
+      operator(this);
+    };
+    var tempDivision = "division";
+    getByName(tempDivision, containId)[0].onclick = function() {
+      operator(this);
+    };
+    var tempMulti = "multi";
+    getByName(tempMulti, containId)[0].onclick = function() {
+      operator(this);
+    };
+    var tempSub = "sub";
+    getByName(tempSub, containId)[0].onclick = function() {
+      operator(this);
+    };
+    var tempAdd = "add";
+    getByName(tempAdd, containId)[0].onclick = function() {
+      operator(this);
+    };
+  }();
 
 
-
+  //数字按钮调用函数 
   function numClick(numTemp) {
     if (finFlag == true) {
       firstNum = '';
@@ -105,6 +131,7 @@ function initCalculator(containId) {
     afterNum = firstNum;
   }
 
+  //运算符函数
   function operator(operatorTemp) {
     doubleEqual = false;
     if (flag == 1) {
@@ -121,6 +148,7 @@ function initCalculator(containId) {
     opeartorFlag = true;
   }
 
+  //计算函数
   function calculator() {
     if (firstNum === '' && opeartorFlag == true) firstNum = beforeNum;
     switch (operatorOption) {
@@ -170,6 +198,7 @@ function initCalculator(containId) {
     opeartorFlag = false;
   }
 
+  //添加+/-
   function addPlusMinus() {
     firstNum += '';
     if (firstNum.length <= 1 && firstNum == 0) {
@@ -181,6 +210,7 @@ function initCalculator(containId) {
     result.value = firstNum;
   }
 
+  //AC功能，即清除所有
   function clearAll() {
     flag = 0;
     result.value = 0;
@@ -195,11 +225,13 @@ function initCalculator(containId) {
     opeartorFlag = false;
   }
 
+  //CE功能，即清除当前一步
   function clearCurrent() {
     result.value = 0;
     firstNum = '';
   }
 
+  //退格功能
   function backOneStep() {
     // 如果刚计算结束，结果无法退格
     if (finFlag == true) return;
@@ -225,6 +257,7 @@ function initCalculator(containId) {
     if (firstNum == 0) enterFlag = false;
     result.value = firstNum;
   }
+
   // 1/x
   function square() {
     var x = 1 - 0;
@@ -246,10 +279,11 @@ function initCalculator(containId) {
 
 }
 
+// 创建input结果输出框
 function createInput() {
   var inputResult = document.createElement("input");
   inputResult.type = "text";
-  inputResult.id = "result";
+  // inputResult.id = "result";
   inputResult.name = "result";
   inputResult.disabled = "true";
   inputResult.style.width = "238px";
@@ -261,6 +295,7 @@ function createInput() {
   return inputResult;
 }
 
+//创建计算器布局
 function createTable() {
   var table = document.createElement("table");
   table.style.borderCollapse = "collapse";
@@ -291,6 +326,8 @@ function createTable() {
       button[i].style.font = "14px Verdana,Helvetica, Arial, sans-serif";
       button[i].style.margin = "0";
       button[i].style.padding = "0";
+
+      //设置hover, active效果
       button[i].onmouseover = function() {
         this.style.backgroundColor = "#CECECE";
       }
@@ -311,7 +348,7 @@ function createTable() {
     button[1].name = "clearOne";
     button[1].innerHTML = "CE";
     button[2].name = "backOne";
-    button[2].id = "backOne";
+    // button[2].id = "backOne";
     button[2].style.width = "120px";
     button[2].innerHTML = "&lt;---";
     for (i = 0; i < 3; i++) {
@@ -342,6 +379,8 @@ function createTable() {
       button[i][j].style.font = "14px Verdana,Helvetica, Arial, sans-serif";
       button[i][j].style.margin = "0";
       button[i][j].style.padding = "0";
+
+      //设置hover, active效果
       button[i][j].onmouseover = function() {
         this.style.backgroundColor = "#CECECE";
       };
@@ -355,7 +394,8 @@ function createTable() {
         this.style.backgroundColor = "#CECECE";
       };
     }
-  }! function() {
+  };
+  ! function() {
     button[0][0].name = "square";
     button[0][0].innerHTML = "1/x";
     button[0][1].name = "sqrt";
@@ -392,9 +432,10 @@ function createTable() {
     button[4][1].name = "number";
     button[4][2].name = "plusMinus";
     button[4][2].innerHTML = "+/-";
-    button[4][3].name = button[4][3].id = "equal";
+    button[4][3].name = "equal";
     button[4][3].innerHTML = "=";
 
+    //设置hover, active效果
     button[4][3].onmouseover = function() {
       this.style.color = "#fff";
       this.style.backgroundColor = "#0078D7";
@@ -410,13 +451,15 @@ function createTable() {
       this.style.backgroundColor = "#0078D7";
     }
 
+    //将按钮插入到余下列中
     for (var i = 0; i < 5; i++) {
       for (var j = 0; j < 4; j++) {
         td[i][j].appendChild(button[i][j]);
-      }
-    }
+      };
+    };
   }();
 
+  //将列插入到行中
   for (var i = 0; i < 5; i++) {
     for (var j = 0; j < 4; j++) {
       tr[i + 1].appendChild(td[i][j])
@@ -427,9 +470,24 @@ function createTable() {
     table.appendChild(tr[i]);
   }
   return table;
-}
+};
 
 
+// *************************************************
+// 定义name获取元素方法
+function getByName(name, parent) {
+  var oParent = parent ? document.getElementById(parent) : document,
+    eles = [],
+    elements = oParent.getElementsByTagName('*');
+
+  for (var i = 0, l = elements.length; i < l; i++) {
+    if (elements[i].name == name) {
+      eles.push(elements[i]);
+    }
+  }
+  return eles;
+};
+//*************************************************
 
 // ********************************************************
 // 重写计算函数，解决js浮点数计算不精确问题
